@@ -1,0 +1,44 @@
+# General
+.DS_Store
+.env
+.idea/
+.vscode/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build artifacts for web
+dist/
+build/
+public/ # If used as a build output directory
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Mobile App Specific (Common examples, adjust based on your actual-app framework)
+# Android
+.gradle/
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries/
+.externalNativeBuild/
+build/
+captures/
+.cxx/
+*.iml
+
+# iOS
+.xcworkspace/
+.xcodeproj/xcuserdata/
+build/
+Pods/
+DerivedData/

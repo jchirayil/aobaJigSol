@@ -1,0 +1,381 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AobaJigSol: Interactive Product Specification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Crafted Neutrals -->
+    <!-- Application Structure Plan: A single-page, vertical-scrolling layout with thematic sections. It starts with a high-level vision, presents an interactive workflow diagram for the core user journey, and allows users to drill down into detailed features via an accordion. This structure was chosen to guide stakeholders from a general understanding to specific details in a logical, digestible flow, which is more effective for a spec document than a data-heavy dashboard. -->
+    <!-- Visualization & Content Choices: Vision->Text; Audience->Interactive Cards; Core Features->Interactive HTML/CSS Workflow Diagram (Click to reveal details); Detailed Features->Accordion; Non-Functional Reqs->Icon Cards; Roadmap->Timeline. These choices avoid data charts (no quantitative data) and use interaction (clicks on workflow/accordion) to manage information density, enhancing usability. All diagrams are built with HTML/CSS as per constraints. NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F6F4;
+            color: #3D405B;
+        }
+        .bg-primary { background-color: #F8F6F4; }
+        .bg-secondary { background-color: #E0DCD6; }
+        .bg-accent { background-color: #81B29A; }
+        .text-accent { color: #81B29A; }
+        .text-dark { color: #3D405B; }
+        .text-light { color: #5F6368; }
+        .border-accent { border-color: #81B29A; }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #3D405B;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #81B29A;
+            border-bottom-color: #81B29A;
+        }
+        .workflow-step {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #E0DCD6;
+        }
+        .workflow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .workflow-step.active {
+            border-color: #81B29A;
+            box-shadow: 0 10px 15px -3px rgba(129, 178, 154, 0.3), 0 4px 6px -2px rgba(129, 178, 154, 0.15);
+            transform: translateY(-5px) scale(1.02);
+        }
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: #EAE8E5;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+        }
+        .accordion-item.active .accordion-arrow {
+            transform: rotate(180deg);
+        }
+        .accordion-arrow {
+            transition: transform 0.3s ease;
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #81B29A;
+            border: 4px solid #F8F6F4;
+        }
+        .roadmap-line {
+            position: absolute;
+            left: -22px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #E0DCD6;
+        }
+    </style>
+</head>
+<body class="bg-primary">
+    <header class="sticky top-0 bg-primary/80 backdrop-blur-md z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-dark">AobaJigSol</h1>
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#vision" class="nav-link">Vision</a></li>
+                <li><a href="#workflow" class="nav-link">Workflow</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#requirements" class="nav-link">Requirements</a></li>
+                <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-20">
+        <section id="hero" class="text-center mb-20 md:mb-32">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-dark mb-4">AobaJigSol</h1>
+            <p class="text-xl md:text-2xl text-accent font-semibold">See the Solution, Piece by Piece.</p>
+            <p class="mt-6 max-w-3xl mx-auto text-light">This is an interactive product specification for AobaJigSol, an innovative mobile companion for physical jigsaw puzzles. Explore the sections below to understand the product's vision, features, and technical foundations.</p>
+        </section>
+
+        <section id="vision" class="mb-20 md:mb-32 scroll-mt-20">
+            <h2 class="section-title">Vision & Goal</h2>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg text-center">
+                <p class="text-lg text-light">
+                    AobaJigSol aims to transform the physical jigsaw puzzle experience by leveraging mobile device cameras and advanced image analysis. The goal is to provide real-time, intelligent guidance to puzzlers, making complex puzzles more accessible and enjoyable. AobaJigSol will act as a helpful assistant, not a complete solver, preserving the challenge while offering strategic support.
+                </p>
+            </div>
+        </section>
+
+        <section id="audience" class="mb-20 md:mb-32 scroll-mt-20">
+            <h2 class="section-title">Target Audience</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🧩</div>
+                    <h3 class="font-bold text-lg text-dark">Casual Puzzlers</h3>
+                    <p class="text-light text-sm">Enjoy the process but sometimes get stuck on challenging sections.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🧗</div>
+                    <h3 class="font-bold text-lg text-dark">Challenge Seekers</h3>
+                    <p class="text-light text-sm">Individuals tackling large or difficult puzzles (1000+ pieces).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">👨‍👩‍👧‍👦</div>
+                    <h3 class="font-bold text-lg text-dark">Families & Groups</h3>
+                    <p class="text-light text-sm">Puzzle together and want a collaborative, guided experience.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🌱</div>
+                    <h3 class="font-bold text-lg text-dark">New Puzzlers</h3>
+                    <p class="text-light text-sm">Seeking a less intimidating and more rewarding entry into the hobby.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover col-span-1 md:col-span-2 lg:col-span-1 lg:col-start-2">
+                    <div class="text-4xl mb-4">📱</div>
+                    <h3 class="font-bold text-lg text-dark">Tech Enthusiasts</h3>
+                    <p class="text-light text-sm">Anyone looking for a modern, tech-assisted approach to a classic pastime.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="mb-20 md:mb-32 scroll-mt-20">
+            <h2 class="section-title">Core User Workflow</h2>
+            <div class="lg:flex lg:gap-8 items-start">
+                <div class="lg:w-1/3 space-y-4 mb-8 lg:mb-0">
+                    <div id="step1" class="workflow-step active bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-dark">1. Initial Setup</h3>
+                        <p class="text-sm text-light">Capture the box image and input the puzzle's piece count.</p>
+                    </div>
+                    <div id="step2" class="workflow-step bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-dark">2. Scan a Piece</h3>
+                        <p class="text-sm text-light">Hold a single piece in front of the camera for identification.</p>
+                    </div>
+                    <div id="step3" class="workflow-step bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-dark">3. Get Guidance</h3>
+                        <p class="text-sm text-light">See the suggested location and orientation on the digital blueprint.</p>
+                    </div>
+                     <div id="step4" class="workflow-step bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-dark">4. Mid-Game Update</h3>
+                        <p class="text-sm text-light">Scan your partial progress to update the app's internal state.</p>
+                    </div>
+                </div>
+                <div class="lg:w-2/3">
+                    <div id="desc-step1" class="workflow-desc bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="font-bold text-lg text-dark mb-2">Setup Your Puzzle</h3>
+                        <p class="text-light">The user starts by creating a "digital blueprint." They take a clear photo of the finished puzzle image from the box. The app helps them crop and align it perfectly. Then, they simply enter the number of pieces (e.g., 1000). This gives the app all the information it needs to start assisting.</p>
+                    </div>
+                    <div id="desc-step2" class="workflow-desc bg-white p-6 rounded-xl shadow-lg hidden">
+                        <h3 class="font-bold text-lg text-dark mb-2">Instant Piece Recognition</h3>
+                        <p class="text-light">The core magic happens here. Using the live camera feed, the user presents a single, physical puzzle piece to the app. On-device AI analyzes the piece's unique shape and the image on it in real-time. There's no need to upload anything; it all happens securely on the device.</p>
+                    </div>
+                    <div id="desc-step3" class="workflow-desc bg-white p-6 rounded-xl shadow-lg hidden">
+                        <h3 class="font-bold text-lg text-dark mb-2">Smart Location Assistance</h3>
+                        <p class="text-light">Once identified, the app highlights the most likely location(s) for the piece on the digital blueprint. It provides a confidence score and suggests the correct orientation. If a piece is ambiguous (like a solid blue sky piece), the app will suggest setting it aside in a virtual "uncertain" pile for later.</p>
+                    </div>
+                    <div id="desc-step4" class="workflow-desc bg-white p-6 rounded-xl shadow-lg hidden">
+                        <h3 class="font-bold text-lg text-dark mb-2">Sync Your Progress</h3>
+                        <p class="text-light">If the puzzle gets tough, the user can pause and get help at any time. By taking a photo of their partially assembled puzzle, the app updates its digital blueprint. It recognizes which pieces are already placed, allowing it to provide even more accurate guidance on the remaining empty spaces. This allows users to enjoy the challenge and only use the app when they truly need a hint.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="mb-20 md:mb-32 scroll-mt-20">
+            <h2 class="section-title">Detailed Features</h2>
+            <div class="max-w-4xl mx-auto space-y-2">
+                <div class="accordion-item bg-white rounded-lg shadow-md">
+                    <div class="accordion-header p-5 flex justify-between items-center">
+                        <h3 class="font-semibold text-lg text-dark">Puzzle Reference & Setup</h3>
+                        <div class="accordion-arrow text-accent text-2xl font-bold">▾</div>
+                    </div>
+                    <div class="accordion-content px-5">
+                        <ul class="list-disc list-inside text-light space-y-2">
+                            <li>**Box Image Capture:** Guided camera overlay for optimal capture of the reference image.</li>
+                            <li>**Image Adjustment:** Simple tools to crop and correct the perspective of the captured image.</li>
+                            <li>**Piece Count Input:** Manual entry for puzzle piece count to ensure accuracy.</li>
+                            <li>**Digital Blueprint Creation:** Internal generation of a segmented puzzle map.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-md">
+                    <div class="accordion-header p-5 flex justify-between items-center">
+                        <h3 class="font-semibold text-lg text-dark">Recognition & Guidance</h3>
+                        <div class="accordion-arrow text-accent text-2xl font-bold">▾</div>
+                    </div>
+                    <div class="accordion-content px-5">
+                        <ul class="list-disc list-inside text-light space-y-2">
+                            <li>**Live Piece Scanning:** Real-time analysis of physical pieces via the device camera.</li>
+                            <li>**Automatic Identification:** On-device AI detects both shape and image content.</li>
+                            <li>**Location & Orientation Suggestions:** Highlights probable locations on the blueprint with rotation guidance.</li>
+                            <li>**Confidence Levels:** Displays "High," "Possible," or "Uncertain" match levels.</li>
+                            <li>**Uncertain Piece Management:** A virtual category to store and review ambiguous pieces.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-md">
+                    <div class="accordion-header p-5 flex justify-between items-center">
+                        <h3 class="font-semibold text-lg text-dark">Progress Tracking & Hints</h3>
+                        <div class="accordion-arrow text-accent text-2xl font-bold">▾</div>
+                    </div>
+                    <div class="accordion-content px-5">
+                        <ul class="list-disc list-inside text-light space-y-2">
+                            <li>**Interactive Digital Board:** A visual map of identified pieces and empty slots.</li>
+                             <li>**Mid-Game Progress Scan:** Update the digital board by scanning the partially built physical puzzle.</li>
+                            <li>**Piece Inventory:** Virtual trays for "Identified & Unplaced" and "Uncertain" pieces.</li>
+                            <li>**Save/Load Progress:** Pause and resume any puzzle session.</li>
+                            <li>**Targeted Hints:** Ask "Where does this piece go?" or "What piece goes here?".</li>
+                            <li>**Basic Hints:** Instantly find all identified corner or edge pieces.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="requirements" class="mb-20 md:mb-32 scroll-mt-20">
+            <h2 class="section-title">Key Pillars (Non-Functional Requirements)</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-5xl mb-4">🚀</div>
+                    <h3 class="font-bold text-lg text-dark">Performance</h3>
+                    <p class="text-light text-sm">Real-time recognition within 1-2 seconds per piece. Smooth camera feed and efficient battery usage are paramount.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-5xl mb-4">🎯</div>
+                    <h3 class="font-bold text-lg text-dark">Accuracy</h3>
+                    <p class="text-light text-sm">High identification rate under common household lighting conditions. Location suggestions must be precise.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-5xl mb-4">🛡️</div>
+                    <h3 class="font-bold text-lg text-dark">Privacy</h3>
+                    <p class="text-light text-sm">All image processing and AI inference occur 100% on-device. No user images are ever uploaded or shared.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-5xl mb-4">✈️</div>
+                    <h3 class="font-bold text-lg text-dark">Offline Capability</h3>
+                    <p class="text-light text-sm">The core puzzle-solving functionality must be available without an internet connection.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="scroll-mt-20">
+            <h2 class="section-title">Future Roadmap</h2>
+            <div class="max-w-2xl mx-auto">
+                <div class="relative pl-8">
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-item mb-10">
+                        <h4 class="font-bold text-dark">Multi-Puzzle Management</h4>
+                        <p class="text-light">Save and manage a library of multiple in-progress and completed puzzles.</p>
+                    </div>
+                    <div class="roadmap-item mb-10">
+                        <h4 class="font-bold text-dark">Advanced Sorting</h4>
+                        <p class="text-light">AI-powered suggestions to sort physical pieces into color or pattern-based groups.</p>
+                    </div>
+                    <div class="roadmap-item mb-10">
+                        <h4 class="font-bold text-dark">LiDAR Integration</h4>
+                        <p class="text-light">Use LiDAR on compatible devices for enhanced spatial awareness and AR placement accuracy.</p>
+                    </div>
+                    <div class="roadmap-item">
+                        <h4 class="font-bold text-dark">Voice Commands</h4>
+                        <p class="text-light">Enable hands-free operation with voice commands for scanning pieces and getting hints.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-secondary text-center p-6 mt-20">
+        <p class="text-sm text-light">AobaJigSol Interactive Specification | &copy; 2025</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const workflowSteps = document.querySelectorAll('.workflow-step');
+            const workflowDescs = document.querySelectorAll('.workflow-desc');
+
+            workflowSteps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const targetId = `desc-${step.id}`;
+                    
+                    workflowSteps.forEach(s => s.classList.remove('active'));
+                    step.classList.add('active');
+
+                    workflowDescs.forEach(desc => {
+                        if (desc.id === targetId) {
+                            desc.classList.remove('hidden');
+                        } else {
+                            desc.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            accordionItems.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                header.addEventListener('click', () => {
+                    const currentlyActive = document.querySelector('.accordion-item.active');
+                    if(currentlyActive && currentlyActive !== item) {
+                        currentlyActive.classList.remove('active');
+                    }
+                    item.classList.toggle('active');
+                });
+            });
+            
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            const sections = document.querySelectorAll('section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if(pageYOffset >= sectionTop - 100){
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href').includes(current)){
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
